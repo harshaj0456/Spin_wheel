@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookish Spin Wheel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Winwheel.js/2.8.0/Winwheel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Georgia", serif;
+      }
+      #spin-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      #spin-btn:hover {
+        background: #4834d4;
+      }
+      #prize-display {
+        margin-top: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #2d3436;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="spinwheel" width="400" height="400"></canvas>
+    <button id="spin-btn">📚 Spin the Wheel!</button>
+    <div id="prize-display"></div>
+
+    <script>
+      // Create the wheel
+      let wheel = new Winwheel({
+        numSegments: 6,
+        outerRadius: 180,
+        textFontSize: 16,
+        segments: [
+          { fillStyle: "#fab1a0", text: "5% Off Coupon" },
+          { fillStyle: "#ffeaa7", text: "Free Bookmark" },
+          { fillStyle: "#81ecec", text: "Free Shipping" },
+          { fillStyle: "#55efc4", text: "10% Off Coupon" },
+          { fillStyle: "#74b9ff", text: "Mystery Sticker" },
+          { fillStyle: "#a29bfe", text: "Better Luck Next Time!" },
+        ],
+        animation: {
+          type: "spinToStop",
+          duration: 5,
+          spins: 8,
+          callbackFinished: alertPrize,
+        },
+      });
+
+      let wheelSpinning = false;
+
+      document
+        .getElementById("spin-btn")
+        .addEventListener("click", function () {
+          if (!wheelSpinning) {
+            wheel.stopAnimation(false); // Reset animation
+            wheel.rotationAngle = 0; // Reset wheel position
+            wheel.draw();
+            wheel.startAnimation();
+            wheelSpinning = true;
+          }
+        });
+
+      // Prize alert
+      function alertPrize(indicatedSegment) {
+        document.getElementById("prize-display").innerText =
+          "🎉 You won: " + indicatedSegment.text + "!";
+        wheelSpinning = false;
+      }
+    </script>
+  </body>
+</html>
